@@ -32,7 +32,7 @@ public abstract class MinecraftClientMixin {
     private void openMenu(CallbackInfo ci) {
         while (AngleSnap.openMenu.wasPressed()) {
             if (this.currentScreen == null && this.player != null) {
-                this.setScreen(new AngleSnapScreen());
+                this.setScreen(new AngleSnapScreen(null));
             }
         }
     }

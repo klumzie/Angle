@@ -14,9 +14,13 @@ import net.minecraft.util.Identifier;
 public class AngleSnapScreen extends Screen {
     private static final Text CONFIGURE_TEXT = Text.translatable("anglesnap.gui.screen.configure");
     private static final Identifier CONFIGURE_TEXTURE = Identifier.of("anglesnap", "textures/gui/configure.png");
+    private Screen parent;
 
-    public AngleSnapScreen() {
+    public AngleSnapScreen(Screen parent) {
         super(Text.translatable("anglesnap.gui.screen.title"));
+        if (parent != null) {
+            this.parent = parent;
+        }
     }
 
     @Override
@@ -30,6 +34,16 @@ public class AngleSnapScreen extends Screen {
     public void snap(AngleEntry angle) {
         angle.snap();
         this.close();
+    }
+
+    @Override
+    public void close() {
+        if (this.parent != null) {
+            MinecraftClient.getInstance().setScreen(this.parent);
+        }
+        else {
+            super.close();
+        }
     }
 
     @Override

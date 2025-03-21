@@ -19,6 +19,9 @@
   "entrypoints": {
     "client": [
       "me.contaria.anglesnap.AngleSnap"
+    ],
+    "modmenu": [
+      "me.contaria.anglesnap.ModMenuApiImpl"
     ]
   },
   "mixins": [
