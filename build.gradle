@@ -32,7 +32,7 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// Mod Menu
-	modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
+	modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
 	
 }
 
