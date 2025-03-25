@@ -1,5 +1,6 @@
 package me.contaria.anglesnap.gui.screen;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import me.contaria.anglesnap.AngleEntry;
 import me.contaria.anglesnap.AngleSnap;
 import net.minecraft.client.MinecraftClient;
@@ -148,7 +149,7 @@ public class AngleSnapListWidget extends ElementListWidget<AngleSnapListWidget.A
             this.name.setChangedListener(name -> this.angle.name = name);
             this.name.setDrawsBackground(false);
             this.name.setEditableColor(Colors.WHITE);
-            this.name.setUneditableColor(Colors.WHITE);
+            this.name.setUneditableColor(this.angle.color);
 
             this.yaw = this.addChild(new TextFieldWidget(
                     this.client.textRenderer,
@@ -166,7 +167,7 @@ public class AngleSnapListWidget extends ElementListWidget<AngleSnapListWidget.A
             });
             this.yaw.setDrawsBackground(false);
             this.yaw.setEditableColor(Colors.WHITE);
-            this.yaw.setUneditableColor(Colors.WHITE);
+            this.yaw.setUneditableColor(Colors.GRAY);
 
             this.pitch = this.addChild(new TextFieldWidget(
                     this.client.textRenderer,
@@ -184,7 +185,7 @@ public class AngleSnapListWidget extends ElementListWidget<AngleSnapListWidget.A
             });
             this.pitch.setDrawsBackground(false);
             this.pitch.setEditableColor(Colors.WHITE);
-            this.pitch.setUneditableColor(Colors.WHITE);
+            this.pitch.setUneditableColor(Colors.GRAY);
 
             this.icon = this.addChild(new IconButtonWidget(Text.empty(), button -> ((IconButtonWidget) button).setTexture(this.angle.nextIcon()), this.angle.getIcon()));
 
@@ -198,8 +199,9 @@ public class AngleSnapListWidget extends ElementListWidget<AngleSnapListWidget.A
             this.color.setChangedListener(color -> this.angle.color = this.parseColor(color));
             this.color.setTextPredicate(color -> color.length() <= (color.startsWith("#") ? 9 : 8));
             this.color.setDrawsBackground(false);
-            this.color.setEditableColor(Colors.WHITE);
             this.color.setUneditableColor(Colors.WHITE);
+            this.color.setEditableColor(this.angle.color);
+
 
             this.edit = this.addChild(new IconButtonWidget(EDIT_TEXT, button -> this.toggleEditing(), EDIT_TEXTURE));
             this.save = this.addChild(new IconButtonWidget(SAVE_TEXT, button -> this.toggleEditing(), SAVE_TEXTURE));
@@ -211,7 +213,24 @@ public class AngleSnapListWidget extends ElementListWidget<AngleSnapListWidget.A
         private String colorToString(int color) {
             return String.format("#%08X", Integer.rotateLeft(color, 8));
         }
+        public static int darkenColor(int argbColor, float factor) {
 
+            int alpha = (argbColor >> 24) & 0xFF;
+            int red = (argbColor >> 16) & 0xFF;
+            int green = (argbColor >> 8) & 0xFF;
+            int blue = argbColor & 0xFF;
+
+            red = (int) (red * factor);
+            green = (int) (green * factor);
+            blue = (int) (blue * factor);
+
+            red = Math.max(0, Math.min(255, red));
+            green = Math.max(0, Math.min(255, green));
+            blue = Math.max(0, Math.min(255, blue));
+
+            // 重新组合 ARGB
+            return (alpha << 24) | (red << 16) | (green << 8) | blue;
+        }
         private int parseColor(String color) {
             if (color.startsWith("#")) {
                 color = color.substring(1);
@@ -244,6 +263,9 @@ public class AngleSnapListWidget extends ElementListWidget<AngleSnapListWidget.A
                 this.yaw.setText(String.valueOf(this.angle.yaw));
                 this.pitch.setText(String.valueOf(this.angle.pitch));
                 this.color.setText(this.colorToString(this.angle.color));
+                this.color.setEditableColor(this.angle.color);
+                this.color.setUneditableColor(darkenColor(this.angle.color,0.4f));
+                this.name.setUneditableColor(this.angle.color);
             }
 
             this.edit.visible = !editing;
@@ -287,7 +309,7 @@ public class AngleSnapListWidget extends ElementListWidget<AngleSnapListWidget.A
             if (this.editing) {
                 this.renderWidgetAt(context, mouseX, mouseY, tickDelta, widget, x, y);
             } else {
-                context.drawText(this.client.textRenderer, widget.getText(), x, y, Colors.WHITE, true);
+                context.drawText(this.client.textRenderer, widget.getText(), x, y, widget.editable ? widget.editableColor : widget.uneditableColor, true);
             }
         }
 
@@ -317,6 +339,7 @@ public class AngleSnapListWidget extends ElementListWidget<AngleSnapListWidget.A
 
         private void renderHexadecimalWidgetAt(DrawContext context, int mouseX, int mouseY, float tickDelta, TextFieldWidget widget, int x, int y) {
             if (this.isHexadecimalOrEmpty(widget.getText())) {
+                widget.setEditableColor(parseColor(widget.getText()));
                 this.renderTextWidgetAt(context, mouseX, mouseY, tickDelta, widget, x, y);
             } else {
                 widget.setEditableColor(Colors.LIGHT_RED);

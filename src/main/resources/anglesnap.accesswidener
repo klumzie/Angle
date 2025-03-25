@@ -1,0 +1,4 @@
+accessWidener v2 named
+accessible field net/minecraft/client/gui/widget/TextFieldWidget editable Z
+accessible field net/minecraft/client/gui/widget/TextFieldWidget editableColor I
+accessible field net/minecraft/client/gui/widget/TextFieldWidget uneditableColor I

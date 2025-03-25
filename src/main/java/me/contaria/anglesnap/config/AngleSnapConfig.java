@@ -27,6 +27,7 @@ public class AngleSnapConfig {
     private final Map<String, Option<?>> options;
 
     public final BooleanOption angleHud;
+    public final BooleanOption renderOverlays;
     public final FloatOption markerScale;
     public final FloatOption textScale;
     public final BooleanOption snapToAngle;
@@ -41,6 +42,7 @@ public class AngleSnapConfig {
 
     public AngleSnapConfig() {
         this.options = new LinkedHashMap<>();
+        this.renderOverlays = this.register("renderOverlays", true);
         this.angleHud = this.register("angleHud", true);
         this.markerScale = this.register("markerScale", 0.0f, 1.0f, 0.2f);
         this.textScale = this.register("textScale", 0.0f, 1.0f, 0.2f);
@@ -61,7 +63,10 @@ public class AngleSnapConfig {
     }
 
     private <T extends Option<?>> T register(T option) {
-        if (this.options.put(option.getId(), option) != null) {
+        if(this.options == null){
+            throw new IllegalStateException("Option failed to initialize!");
+        }
+        if ( this.options.put(option.getId(), option) != null) {
             throw new IllegalStateException("Tried to register option '" + option.getId() + "' twice!");
         }
         return option;
