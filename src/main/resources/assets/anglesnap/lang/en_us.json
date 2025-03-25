@@ -12,6 +12,7 @@
   "anglesnap.gui.screen.save": "Save",
 
   "anglesnap.gui.config.title": "AngleSnap Config",
+  "anglesnap.gui.config.option.renderOverlays": "Render Overlays",
   "anglesnap.gui.config.option.angleHud": "Show Precise Angle",
   "anglesnap.gui.config.option.markerScale": "Marker Scale",
   "anglesnap.gui.config.option.markerScale.value": "%sx",
