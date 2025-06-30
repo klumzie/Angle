@@ -5,10 +5,10 @@ import me.contaria.anglesnap.config.AngleSnapConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -63,7 +63,7 @@ public class AngleSnap implements ClientModInitializer {
         ));
 
         WorldRenderEvents.LAST.register(AngleSnap::renderOverlay);
-        HudLayerRegistrationCallback.EVENT.register(drawer -> drawer.attachLayerAfter(IdentifiedLayer.DEBUG, Identifier.of("anglesnap", "overlay"), AngleSnap::renderHud));
+        HudElementRegistry.attachElementAfter(VanillaHudElements.DEBUG, Identifier.of("anglesnap", "overlay"), AngleSnap::renderHud);
 
         ClientPlayConnectionEvents.JOIN.register((networkHandler, packetSender, client) -> {
             if (client.isIntegratedServerRunning()) {
@@ -124,7 +124,7 @@ public class AngleSnap implements ClientModInitializer {
 
         Matrix4f matrix4f = matrices.peek().getPositionMatrix();
         MinecraftClient client = MinecraftClient.getInstance();
-        RenderLayer layer = RenderLayer.getGuiTexturedOverlay(angle.getIcon());
+        RenderLayer layer = RenderLayer.getOpaqueParticle(angle.getIcon());
         VertexConsumer consumer = client.getBufferBuilders().getEffectVertexConsumers().getBuffer(layer);
         consumer.vertex(matrix4f, -1.0f, -1.0f, 0.0f).color(angle.color).texture(0.0f, 0.0f);
         consumer.vertex(matrix4f, -1.0f, 1.0f, 0.0f).color(angle.color).texture(0.0f, 1.0f);
