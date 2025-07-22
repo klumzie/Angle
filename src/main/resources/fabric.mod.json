@@ -1,47 +1,11 @@
-{
-  "schemaVersion": 1,
-  "id": "anglesnap",
-  "version": "${version}",
-  "name": "AngleSnap",
-  "description": "Save and snap to precise angles.",
-  "authors": [
-    {
-      "name": "contaria",
-      "contact": {
-        "homepage": "https://github.com/KingContaria/"
-      }
-    }
+"entrypoints": {
+  "client": [
+    "me.contaria.anglesnap.AngleSnap"
   ],
-  "contact": {
-    "homepage": "https://modrinth.com/mod/anglesnap",
-    "sources": "https://github.com/KingContaria/anglesnap",
-    "issues": "https://github.com/KingContaria/anglesnap/issues"
-  },
-  "license": "MIT",
-  "environment": "client",
-  "entrypoints": {
-    "client": [
-      "me.contaria.anglesnap.AngleSnap"
-    ],
-    "modmenu": [
-      "me.contaria.anglesnap.ModMenuApiImpl"
-    ]
-  },
-  "custom": {
-    "modmenu": {
-      "links": {
-        "modmenu.discord": "https://discord.gg/B6ZV8SF672",
-        "anglesnap.link.donations": "https://ko-fi.com/contaria"
-      }
-    }
-  },
-  "mixins": [
-    "anglesnap.mixins.json"
+  "server": [
+    "me.contaria.anglesnap.AngleSnapServer"
   ],
-  "depends": {
-    "fabricloader": ">=0.16.10",
-    "minecraft": "1.21.6",
-    "java": ">=21",
-    "fabric-api": ">=0.116.0"
-  }
+  "modmenu": [
+    "me.contaria.anglesnap.ModMenuApiImpl"
+  ]
 }
